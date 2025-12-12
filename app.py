@@ -4,8 +4,13 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 import os
 
+# Initialize Flask app
 app = Flask(__name__)
+
+# Load the trained model
 model = load_model('planets_and_moons_model.h5')
+
+# Categories corresponding to the model output
 categories = ['earth', 'jupiter', 'mars', 'mercury', 'moon', 'neptune', 'pluto', 'saturn', 'uranus', 'venus']
 
 @app.route('/')
@@ -20,8 +25,12 @@ def predict():
     if file.filename == '':
         return "No selected file"
 
+    # Ensure the uploads directory exists
+    upload_folder = os.path.join('static', 'uploads')
+    os.makedirs(upload_folder, exist_ok=True)
+
     # Save the uploaded image
-    filepath = os.path.join('static', 'uploads', file.filename)
+    filepath = os.path.join(upload_folder, file.filename)
     file.save(filepath)
 
     # Preprocess the image
@@ -38,6 +47,5 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
-# if __name__ == "__main__":
-#     app.run(debug=True, host='0.0.0.0', port=5000)
+    # To make it accessible on other devices, use:
+    # app.run(debug=True, host='0.0.0.0', port=5000)
